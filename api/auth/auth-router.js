@@ -1,9 +1,14 @@
 const router = require("express").Router();
 const db = require("../../data/dbConfig");
 const bcrypt = require("bcryptjs");
+const { validateProperties, checkUsernameExists } = require("./auth-middlware");
 
-router.post("/register", async (req, res, next) => {
-  /*
+router.post(
+  "/register",
+  validateProperties,
+  checkUsernameExists,
+  async (req, res) => {
+    /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
     DO NOT EXCEED 2^8 ROUNDS OF HASHING!
@@ -28,13 +33,14 @@ router.post("/register", async (req, res, next) => {
     4- On FAILED registration due to the `username` being taken,
       the response body should include a string exactly as follows: "username taken".
   */
-  const { username, password } = req.body;
-  const hash = bcrypt.hashSync(password, 8);
-  //this is where I add my user in the database
-  await db("users").insert({ username, password: hash });
-  const getUser = await db("users").where("username", username).first();
-  res.status(201).json(getUser);
-});
+    const { username, password } = req.body;
+    const hash = bcrypt.hashSync(password, 8);
+    //this is where I add my user in the database
+    await db("users").insert({ username, password: hash });
+    const getUser = await db("users").where("username", username).first();
+    return res.status(201).json(getUser);
+  }
+);
 
 router.post("/login", (req, res) => {
   res.end("implement login, please!");
