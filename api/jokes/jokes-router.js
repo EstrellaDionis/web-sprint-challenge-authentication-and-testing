@@ -1,8 +1,9 @@
 // do not make changes to this file
-const router = require('express').Router();
-const jokes = require('./jokes-data');
+const router = require("express").Router();
+const jokes = require("./jokes-data");
+const { restrictEndpoint } = require("./jokes-middleware");
 
-router.get('/', (req, res) => {
+router.get("/", restrictEndpoint, (req, res) => {
   res.status(200).json(jokes);
 });
 

@@ -19,14 +19,24 @@ const checkUsernameExists = async (req, res, next) => {
   }
 };
 
-// 4- On FAILED registration due to the `username` being taken,
-//       the response body should include a string exactly as follows: "username taken".
+const validateUsername = async (req, res, next) => {
+  try {
+    const { username } = req.body;
+    const userAttempt = await db("users").where("username", username).first();
+    console.log(req.user);
+    if (!userAttempt) {
+      next({ status: 422, message: "Invalid credentials" });
+    } else {
+      req.user = userAttempt;
+      next();
+    }
+  } catch (err) {
+    next(err);
+  }
+};
 
-// 1) check IF username already exists in the database
-// 2) if user is in the database: return status(401).json({ message: "username taken"})
-
-// "username and password required"
 module.exports = {
   validateProperties,
   checkUsernameExists,
+  validateUsername,
 };
