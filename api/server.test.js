@@ -19,14 +19,12 @@ describe("POST /register", () => {
 
     expect(res.status).toBe(201);
   });
-  // "$2a$08$9LnREzPBoOJwVFmBde8QqOa9nAuPfQWXAi3fjnRBoMJqBusEfYcrG"
   test("Creating a user returns the user", async () => {
     const res = await request(server)
       .post("/api/auth/register")
-      .send({ username: "Captain America", password: "foobar" })
-      .expect(201)
-      .then((response) => {
-        expect(response["header"]).toBe(2);
-      });
+      .send({ username: "Captain America", password: "foobar" });
+
+    expect(res.body.id).toBe(2);
+    expect(res.body.username).toBe("Captain America");
   });
 });
