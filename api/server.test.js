@@ -62,7 +62,8 @@ describe("GET /jokes", () => {
 
     const res = await request(server)
       .get("/api/jokes")
-      .set("Header", { authorization: token });
+      // without field argument this defaults to header
+      .set({ authorization: token });
 
     expect(res.status).toBe(200);
   });
