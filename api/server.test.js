@@ -28,3 +28,20 @@ describe("POST /register", () => {
     expect(res.body.username).toBe("Captain America");
   });
 });
+
+describe("POST /login", () => {
+  test("Logging in returns status of 200", async () => {
+    const res = await request(server)
+      .post("/api/auth/login")
+      .send({ username: "Captain Marvel", password: "foobar" });
+
+    expect(res.status).toBe(200);
+  });
+  test("Logging in returns welcome message", async () => {
+    const res = await request(server)
+      .post("/api/auth/login")
+      .send({ username: "Captain Marvel", password: "foobar" });
+
+    expect(res.body.message).toBe("welcome, Captain Marvel");
+  });
+});

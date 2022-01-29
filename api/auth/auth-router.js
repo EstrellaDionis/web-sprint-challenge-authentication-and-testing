@@ -45,7 +45,7 @@ router.post(
     //this is where I add my user in the database
     await db("users").insert({ username, password: hash });
     const getUser = await db("users").where("username", username).first();
-    return res.status(201).json(getUser);
+    return res.status(201).send(getUser);
   }
 );
 
@@ -79,7 +79,7 @@ router.post(
   */
     if (bcrypt.compareSync(req.body.password, req.user.password)) {
       const token = buildToken(req.user);
-      res.json({
+      res.status(200).send({
         message: `welcome, ${req.user.username}`,
         token,
       });
