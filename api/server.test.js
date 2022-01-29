@@ -45,3 +45,25 @@ describe("POST /login", () => {
     expect(res.body.message).toBe("welcome, Captain Marvel");
   });
 });
+
+describe("GET /jokes", () => {
+  test("Without token we get error", async () => {
+    const res = await request(server).get("/api/jokes");
+
+    expect(res.status).toBe(401);
+  });
+
+  test("With token we get the jokes", async () => {
+    const login = await request(server)
+      .post("/api/auth/login")
+      .send({ username: "Captain Marvel", password: "foobar" });
+
+    const token = login.body.token;
+
+    const res = await request(server)
+      .get("/api/jokes")
+      .set("Header", { authorization: token });
+
+    expect(res.status).toBe(200);
+  });
+});
